@@ -9,4 +9,6 @@ export interface IUserRepository {
   verifyOTP(userId: string, otp: string): Promise<boolean>;
   findByEmail(email: string): Promise<User | null>;
   find(): Promise<{} | null>;
+  BlockUnblock(id: string): Promise<Boolean | String>;
+  resetPassword(email: string, password: string): Promise<Boolean | String>;
 }

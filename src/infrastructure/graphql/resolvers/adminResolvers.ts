@@ -1,4 +1,5 @@
 // adminResolvers.ts
+import { BlockUnblockUseCase } from "../../../application/use-cases/admin/BlockUnblockUseCase";
 import { CreateAdminUseCase } from "../../../application/use-cases/admin/CreateAdminUseCase";
 import { DeleteAdminUseCase } from "../../../application/use-cases/admin/DeleteAdminUseCase";
 import { GetAdminUseCase } from "../../../application/use-cases/admin/GetAdminUseCase";
@@ -41,6 +42,16 @@ export const adminResolver = {
     ) => {
       const createAdminUseCase = new CreateAdminUseCase(adminRepository);
       return await createAdminUseCase.execute(name, email, password);
+    },
+
+    BlockUnblockUser: async (_: any, { id }: { id: string }) => {
+      const BlockUnbloc = new BlockUnblockUseCase(userRepository);
+      const result = await BlockUnbloc.execute(id);
+      console.log("result", result);
+      if(result){
+        return { message: "User Blocked successfully", success: true };
+      }       
+      return { message: "User UnBlocked successfully", success: true };
     },
     updateAdmin: async (
       _: any,

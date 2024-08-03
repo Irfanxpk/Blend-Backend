@@ -26,10 +26,10 @@ export const typeDefs = gql`
     message: String!
   }
 
-  type Query {
-    getAdmin(email: String!, password: String!): Admin
-    getUser(id: ID!): User
-    users: [user]
+  type Reset {
+    success: Boolean!
+    message: String!
+    req_id: String!
   }
 
   type OtpResponse {
@@ -40,25 +40,32 @@ export const typeDefs = gql`
 
   type LoginResponse {
     user: User
-    token: String
-    success: Boolean
-    message: String
+    token: String!
+    success: Boolean!
+    message: String!
   }
 
   type message {
     user: User
   }
 
- type Reset {
-   success: Boolean!
-   message: String
-   
- }
+  type BlockUnblock {
+    success: Boolean!
+    message: String!
+  }
+
+  type Query {
+    getAdmin(email: String!, password: String!): Admin
+    getUser(id: ID!): User
+    users: [user]
+    checkToken(token: String!): Reset
+  }
 
   type Mutation {
     validateOtp(email: String!, otp: String!, id: String!): OtpResponse!
     login(email: String!, password: String!): LoginResponse
-    resetPassword(email: String!): message
+    forgetPassword(email: String!): Reset
+    resetPassword(token:String!,password:String!):Reset
     updateAdmin(
       id: ID!
       displayName: String!
@@ -78,6 +85,7 @@ export const typeDefs = gql`
 
     createAdmin(name: String!, email: String!, password: String!): Admin
 
+    BlockUnblockUser(id: ID!): BlockUnblock
     updateUser(id: ID!, name: String!, email: String!, password: String!): User
     deleteUser(id: ID!): User
   }

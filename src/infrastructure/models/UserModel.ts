@@ -29,6 +29,7 @@ const UserSchema: Schema = new Schema({
   otpExpires: { type: Date, required: false },
   IsVerified: { type: Boolean, required: false, default: false },
   IsBlocked: { type: Boolean, required: false, default: false },
+  IsResetRequested: { type: Boolean, required: false, default: false },
 },{timestamps: true,});
 
 export const UserModel = mongoose.model<IUser>("User", UserSchema);

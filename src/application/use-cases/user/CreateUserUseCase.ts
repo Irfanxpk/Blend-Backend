@@ -5,6 +5,7 @@ import {
   generateOTP,
   sendOTP,
   generateToken,
+  hashPassword,
 } from "../../../infrastructure/utils";
 
 interface CreateUserInput {
@@ -21,7 +22,7 @@ export class CreateUserUseCase {
     input: CreateUserInput
   ): Promise<{ token: string; user: User; message: string }> {
     console.log("iam on createuserusecase")
-    let hashedPassword = await argon2.hash(input.password);
+    let hashedPassword = await hashPassword(input.password);
     const newUser = new User("", input.name, input.email, hashedPassword, input.dob);
 
     const savedUser = await this.userRepository.save(newUser);

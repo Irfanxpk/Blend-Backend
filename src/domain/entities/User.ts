@@ -8,6 +8,7 @@ export class User {
     public image?: string,
     public otp?: string,
     public otpExpires?: Date,
-    public isBlocked?: boolean
+    public isBlocked?: boolean,
+    public IsResetRequested?: boolean,
   ) {}
 }
