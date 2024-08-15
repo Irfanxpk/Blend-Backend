@@ -28,7 +28,8 @@ export const adminResolver = {
     },
     users: async () => {
       const getUsersUseCase = new GetUsersUseCase(userRepository);
-      return await getUsersUseCase.execute();
+       return await getUsersUseCase.execute();
+   
     },
   },
   Mutation: {

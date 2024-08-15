@@ -18,7 +18,7 @@ export class MongoUserRepository implements IUserRepository {
       );
     } catch (error) {
       Logger.error("Error finding user by ID:", error);
-      throw new CustomError("Error finding user by ID");
+      throw new CustomError("Error finding user by ID", 500);
     }
   }
 
@@ -27,11 +27,11 @@ export class MongoUserRepository implements IUserRepository {
       const usersData = await UserModel.find();
       return usersData.map(
         (user) =>
-          new User(user.id, user.name, user.email, user.password, user.dob)
+          new User(user.id, user.name, user.email, user.password, user.dob,user.image, user.IsBlocked)
       );
     } catch (error) {
       Logger.error("Error finding users:", error);
-      throw new CustomError("Error finding users");
+      throw new CustomError("Error finding users",500);
     }
   }
 
@@ -47,7 +47,7 @@ export class MongoUserRepository implements IUserRepository {
       );
     } catch (error) {
       Logger.error("Error saving user:", error);
-      throw new CustomError("Error saving user");
+      throw new CustomError("Error saving user", 500);
     }
   }
 
@@ -56,7 +56,7 @@ export class MongoUserRepository implements IUserRepository {
       const updatedUser = await UserModel.findByIdAndUpdate(user.id, user, {
         new: true,
       });
-      if (!updatedUser) throw new CustomError("User not found");
+      if (!updatedUser) throw new CustomError("User not found",500);
       return new User(
         updatedUser.id,
         updatedUser.name,
@@ -66,7 +66,7 @@ export class MongoUserRepository implements IUserRepository {
       );
     } catch (error) {
       Logger.error("Error updating user:", error);
-      throw new CustomError("Error updating user");
+      throw new CustomError("Error updating user",500);
     }
   }
 
@@ -75,7 +75,7 @@ export class MongoUserRepository implements IUserRepository {
       await UserModel.findByIdAndDelete(id);
     } catch (error) {
       Logger.error("Error deleting user:", error);
-      throw new CustomError("Error deleting user");
+      throw new CustomError("Error deleting user", 500);
     }
   }
 
@@ -84,7 +84,7 @@ export class MongoUserRepository implements IUserRepository {
       await UserModel.findByIdAndUpdate(userId, { otp, otpExpires });
     } catch (error) {
       Logger.error("Error saving OTP:", error);
-      throw new CustomError("Error saving OTP");
+      throw new CustomError("Error saving OTP",500);
     }
   }
 
@@ -103,7 +103,7 @@ export class MongoUserRepository implements IUserRepository {
       return false;
     } catch (error) {
       Logger.error("Error verifying OTP:", error);
-      throw new CustomError("Error verifying OTP");
+      throw new CustomError("Error verifying OTP",500);
     }
   }
 
@@ -120,7 +120,7 @@ export class MongoUserRepository implements IUserRepository {
       }
     } catch (error) {
       Logger.error("Error resetting password:", error);
-      throw new CustomError("Error resetting password");
+      throw new CustomError("Error resetting password",500);
     }
   }
 
@@ -131,20 +131,20 @@ export class MongoUserRepository implements IUserRepository {
       return new User(user.id, user.name, user.email, user.password, user.dob);
     } catch (error) {
       Logger.error("Error finding user by email:", error);
-      throw new CustomError("Error finding user by email");
+      throw new CustomError("Error finding user by email",500);
     }
   }
 
   async BlockUnblock(id: string): Promise<boolean> {
     try {
       const user = await UserModel.findById(id);
-      if (!user) throw new CustomError("User not found");
+      if (!user) throw new CustomError("User not found",500);
       user.IsBlocked = !user.IsBlocked;
       await user.save();
       return user.IsBlocked;
     } catch (error) {
       Logger.error("Error blocking/unblocking user:", error);
-      throw new CustomError("Error blocking/unblocking user");
+      throw new CustomError("Error blocking/unblocking user",500);
     }
   }
 }

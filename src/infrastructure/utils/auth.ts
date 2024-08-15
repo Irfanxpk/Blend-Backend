@@ -8,6 +8,7 @@ dotenv.config();
 const SECRET_KEY =process.env.JWT_SECRET;
 
 export const generateToken = (userId: string): string => {
+  console.log("SECRET_KEY", SECRET_KEY);
   if(!SECRET_KEY) throw new Error("error while generating token"); 
   return jwt.sign({ userId }, SECRET_KEY, { expiresIn: "1h" });
 };
@@ -39,13 +40,21 @@ export const generateOTP = () => {
   });
 };
 
-export const sendOTP = async (email: string, otp: string): Promise<void> => {
-  const mailOptions = {
-    from: "process.env.MAIL_USER",
-    to: email,
-    subject: "Your OTP Code",
-    text: `Your OTP code is ${otp}`,
-  };
+export const sendOTP = async (email: string, otp: string): Promise<any> => {
+  try {
+     const mailOptions = {
+       from: "process.env.MAIL_USER",
+       to: email,
+       subject: "Your OTP Code",
+       text: `Your OTP code is ${otp}`,
+     };
+     const info = await transporter.sendMail(mailOptions);
+     return info;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+ 
 
 }
   export const sendResetPasswordEmail = async (

@@ -1,6 +1,5 @@
 import { User } from "../../../domain/entities";
 import { IUserRepository } from "../../../application/repositories";
-import argon2 from "argon2";
 import {
   generateOTP,
   sendOTP,
@@ -30,10 +29,12 @@ export class CreateUserUseCase {
     const otpExpires = new Date(Date.now() + 15 * 60 * 1000); // OTP expires in 15 minutes
     await this.userRepository.saveOTP(savedUser.id, otp, otpExpires);
 
-    await sendOTP(savedUser.email, otp);
+    const info = await sendOTP(savedUser.email, otp);
 
+    console.log("info", info);
+    
      const token = generateToken(savedUser.id);
-
+      
      return { token, user: savedUser, message: "User created and OTP sent" };
   }
 }

@@ -11,8 +11,8 @@ export const typeDefs = gql`
     id: ID!
     name: String!
     email: String!
+    isBlocked: Boolean!
     image: String!
-    IsBlocked: Boolean!
   }
 
   type User {
@@ -65,7 +65,7 @@ export const typeDefs = gql`
     validateOtp(email: String!, otp: String!, id: String!): OtpResponse!
     login(email: String!, password: String!): LoginResponse
     forgetPassword(email: String!): Reset
-    resetPassword(token:String!,password:String!):Reset
+    resetPassword(token: String!, password: String!): Reset
     updateAdmin(
       id: ID!
       displayName: String!

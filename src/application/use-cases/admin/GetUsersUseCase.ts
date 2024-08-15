@@ -5,6 +5,8 @@ export class GetUsersUseCase {
   constructor(private userRepository: IUserRepository) {}
 
   async execute(): Promise<{} | null> {
-    return await this.userRepository.find();
+    const res = await this.userRepository.find();
+    console.log("res", res);
+    return res;
   }
 }

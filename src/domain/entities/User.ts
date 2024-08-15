@@ -6,9 +6,9 @@ export class User {
     public password: string,
     public dob: Date,
     public image?: string,
+    public isBlocked?: boolean,
     public otp?: string,
     public otpExpires?: Date,
-    public isBlocked?: boolean,
     public IsResetRequested?: boolean,
   ) {}
 }

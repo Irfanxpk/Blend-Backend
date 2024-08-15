@@ -1,5 +1,5 @@
 // userResolvers.ts
-import { CreateUserUseCase } from "../../../index";
+import { CreateUserUseCase, generateToken } from "../../../index";
 import { DeleteUserUseCase } from "../../../index";
 import { GetUserUseCase } from "../../../index";
 import { UpdateUserUseCase } from "../../../index";
@@ -16,10 +16,15 @@ const userRepository = new MongoUserRepository();
 
 export const userResolver = {
   Query: {
-    getUser: async (_: any, { id }: { id: string }) => {
+    getUser: async (_: any, context: any) => {
+      const { userId } = context;
+      if (!userId) {
+        throw new Error("Unauthorized");
+      }
       const getUserUseCase = new GetUserUseCase(userRepository);
-      return await getUserUseCase.execute(id);
+      return await getUserUseCase.execute(userId);
     },
+
     checkToken: async (_: any, { token }: { token: string }) => {
       const data = verifyToken(token);
       console.log("data", data);
@@ -100,15 +105,20 @@ export const userResolver = {
       _: any,
       { email, password }: { email: string; password: string }
     ) => {
+      // console.log(context);
+      // if(!context.userId)throw new Error("Not authenticated");
       const loginUserUseCase = new LoginUserUseCase(userRepository);
       const user = await loginUserUseCase.execute(email, password);
       if (user) {
-        const token = jwt.sign({ userId: user.id }, "gdfsgsdgsdfg", {
-          expiresIn: "1h",
-        });
-        return { success: true, user, token };
+        const token = generateToken(user.id);
+        return { success: true, user, token, message: "Login successful" };
       }
-      return { success: false, user: null, token: null };
+      return {
+        success: false,
+        user: null,
+        token: null,
+        message: "Invalid email or password",
+      };
     },
 
     forgetPassword: async (_: any, { email }: { email: string }) => {
@@ -117,7 +127,7 @@ export const userResolver = {
 
       return { message: data.message, success: data.success };
     },
-  
+
     resetPassword: async (
       _: any,
       { token, password }: { token: string; password: string }
@@ -127,7 +137,7 @@ export const userResolver = {
 
       return { message: data.message, success: data.success };
     },
-    
+
     updateUser: async (
       _: any,
       {
